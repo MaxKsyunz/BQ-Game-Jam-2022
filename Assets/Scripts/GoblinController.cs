@@ -5,19 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof (SpriteRenderer))]
 public class GoblinController : MonoBehaviour
 {
-    // Level specific waypoint list.
-    // Don't forget to for every level in the editor!
-    public List<GameObject> defaultWaypoints;
-    public List<Sprite> goblinSprites = new List<Sprite>();
-
-    public float speed;
-    public const float  patrolSpeed = 2f;
-    LinkedList<GameObject> curPath;
-    public float sightRadius = 5f;
-
-    SpriteRenderer spriteRenderer;
-
-    GameObject currentTarget;
 
     enum Mood
     {
@@ -33,17 +20,37 @@ public class GoblinController : MonoBehaviour
         { "Waypoint", Mood.Casual }
     };
 
+    Dictionary<Mood, float> moodSpeedDict = new Dictionary<Mood, float>
+    {
+        { Mood.Hungry, 3f },
+        { Mood.Angry, 3f },
+        { Mood.Casual, 2f }
+    };
+
+    // Level specific waypoint list.
+    // Don't forget to for every level in the editor!
+    public List<GameObject> defaultWaypoints;
+    public List<Sprite> goblinSprites = new List<Sprite>();
+
+    private float speed;
+    LinkedList<GameObject> curPath;
+    public float sightRadius = 5f;
+
+    SpriteRenderer spriteRenderer;
+
+    GameObject currentTarget;
+
     Mood goblinMood = Mood.Casual;
 
 
     void Start()
     {
-        speed = patrolSpeed;
         curPath = new LinkedList<GameObject>();
         loadDefaultPath();
         currentTarget = curPath.First.Value;
         curPath.RemoveFirst();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        speed = moodSpeedDict[goblinMood];
     }
 
     private void loadDefaultPath()
@@ -83,6 +90,7 @@ public class GoblinController : MonoBehaviour
             curPath.RemoveFirst();
         }
 
+        speed = moodSpeedDict[goblinMood];
         goblinMood = spriteMoodDict[currentTarget.gameObject.tag];
         spriteRenderer.sprite = goblinSprites[(int) goblinMood];
     }
