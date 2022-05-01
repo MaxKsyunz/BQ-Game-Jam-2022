@@ -8,6 +8,8 @@ TagManager:
   - Unit
   - Item
   - Fruit
+  - Goblin
+  - Waypoint
   layers:
   - Default
   - TransparentFX

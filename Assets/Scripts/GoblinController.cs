@@ -2,13 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-enum Mood
-{
-    Casual,
-    Hungry,
-    Angry
-}
-
 [RequireComponent(typeof (SpriteRenderer))]
 public class GoblinController : MonoBehaviour
 {
@@ -26,7 +19,22 @@ public class GoblinController : MonoBehaviour
 
     GameObject currentTarget;
 
+    enum Mood
+    {
+        Casual,
+        Hungry,
+        Angry
+    }
+
+    Dictionary<string, Mood> spriteMoodDict = new Dictionary<string, Mood>
+    {
+        { "Fruit", Mood.Hungry },
+        { "Player", Mood.Angry },
+        { "Waypoint", Mood.Casual }
+    };
+
     Mood goblinMood = Mood.Casual;
+
 
     void Start()
     {
@@ -34,6 +42,7 @@ public class GoblinController : MonoBehaviour
         curPath = new LinkedList<GameObject>();
         loadDefaultPath();
         currentTarget = curPath.First.Value;
+        curPath.RemoveFirst();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -52,6 +61,12 @@ public class GoblinController : MonoBehaviour
 
     void WalkAround()
     {
+        while (currentTarget == null)
+        {
+            currentTarget = curPath.First.Value;
+            curPath.RemoveFirst();
+        }
+
         var step = speed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, currentTarget.transform.position, step);
 
@@ -59,15 +74,16 @@ public class GoblinController : MonoBehaviour
 
         if (transform.position == currentTarget.transform.position)
         {
-            curPath.RemoveFirst();
             if (curPath.Count == 0)
             {
                 loadDefaultPath();
             }
 
             currentTarget = curPath.First.Value;
+            curPath.RemoveFirst();
         }
 
+        goblinMood = spriteMoodDict[currentTarget.gameObject.tag];
         spriteRenderer.sprite = goblinSprites[(int) goblinMood];
     }
 
@@ -75,10 +91,18 @@ public class GoblinController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Fruit"))
         {
-            curPath.AddFirst(collision.gameObject);
-            currentTarget = curPath.First.Value;
+            curPath.AddFirst(currentTarget);
+            currentTarget = collision.gameObject;
+        }
+    }
 
-            goblinMood = Mood.Hungry;
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Fruit"))
+        {
+            goblinMood = Mood.Casual;
+            currentTarget = curPath.First.Value;
+            curPath.RemoveFirst();
         }
     }
 
