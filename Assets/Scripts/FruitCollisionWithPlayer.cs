@@ -5,11 +5,12 @@ using UnityEngine;
 public class FruitCollisionWithPlayer : MonoBehaviour
 {
     public GameObject emptyTree;
+    LevelManager levelManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        levelManager = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
     }
 
     // Update is called once per frame
@@ -24,6 +25,7 @@ public class FruitCollisionWithPlayer : MonoBehaviour
         {
             Destroy(gameObject);
             Instantiate(emptyTree, transform.position, Quaternion.identity);
+            levelManager.fruitCount -= 1;
         }
     }
 }
