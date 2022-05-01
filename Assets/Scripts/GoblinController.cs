@@ -16,7 +16,7 @@ public class GoblinController : MonoBehaviour
     Dictionary<string, Mood> spriteMoodDict = new Dictionary<string, Mood>
     {
         { "Fruit", Mood.Hungry },
-        { "Player", Mood.Angry },
+        { "Farmer", Mood.Angry },
         { "Waypoint", Mood.Casual }
     };
 
@@ -98,6 +98,12 @@ public class GoblinController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Fruit"))
+        {
+            curPath.AddFirst(currentTarget);
+            currentTarget = collision.gameObject;
+        }
+
+        if (collision.gameObject.CompareTag("Farmer"))
         {
             curPath.AddFirst(currentTarget);
             currentTarget = collision.gameObject;
