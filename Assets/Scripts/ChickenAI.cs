@@ -4,37 +4,36 @@ using UnityEngine;
 
 public class ChickenAI : MonoBehaviour
 {
+    private SpriteRenderer spriteRenderer;
     public float MovementSpeed = 1;
     public Vector3 moveAmount;
 
-    public float BorderX = 5.0f;
-    public float BorderY = 5.0f;
+    public float minDistanceToPlayer = 1.5f;
+    private GameObject player;
 
-    public Vector3 direction;
-    // Start is called before the first frame update
     void Start()
     {
-        direction = new Vector3(1, 0).normalized;
+        player = GameObject.Find("Player");
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        moveAmount += new Vector3(direction.x *Time.deltaTime * MovementSpeed, direction.y * Time.deltaTime * MovementSpeed, 0);
-        Vector3 moveDiff = moveAmount * Time.deltaTime * 8;
-        transform.position += moveDiff;
-        moveAmount -= moveDiff;
+        // Follow the player
+        var dist = Vector3.Distance(player.transform.position, this.transform.position);
+        if (dist < minDistanceToPlayer)
+        {
+            // if close enough to the player do nothing
+        }
+        else
+        {
+            // else move towards the player
+            transform.position = Vector3.MoveTowards(transform.position, player.transform.position,
+                Time.deltaTime * MovementSpeed);
+            
+        }
 
-        if (transform.position.x > BorderX)
-            transform.position = new Vector3(-BorderY, transform.position.y);
-
-        if (transform.position.x < -BorderX)
-            transform.position = new Vector3(BorderX, transform.position.y);
-
-        if (transform.position.y > BorderY)
-            transform.position = new Vector3(transform.position.x, -BorderY);
-
-        if (transform.position.y < -BorderY)
-            transform.position = new Vector3(transform.position.x, BorderY);
+        // face the chicken towards the player.
+        spriteRenderer.flipX = player.transform.position.x < this.transform.position.x;
     }
 }
