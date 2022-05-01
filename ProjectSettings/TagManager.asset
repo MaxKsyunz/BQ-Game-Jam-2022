@@ -10,6 +10,7 @@ TagManager:
   - Fruit
   - Goblin
   - Waypoint
+  - Farmer
   layers:
   - Default
   - TransparentFX
