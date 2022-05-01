@@ -19,7 +19,7 @@ public class PlayerDeath : MonoBehaviour
    
     void OnCollisionEnter2D(Collision2D coll)
     {
-        if (coll.gameObject.name == "Goblin")
+        if (coll.gameObject.CompareTag("Goblin"))
         {
             Scene scene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(scene.name);
