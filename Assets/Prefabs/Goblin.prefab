@@ -158,7 +158,7 @@ MonoBehaviour:
   - {fileID: 454266884, guid: 6c06c3041fb9e429fa0ff3b350206da1, type: 3}
   - {fileID: 1971535187, guid: 6c06c3041fb9e429fa0ff3b350206da1, type: 3}
   - {fileID: 1650373725, guid: 6c06c3041fb9e429fa0ff3b350206da1, type: 3}
-  speed: 2
+  - {fileID: 21300000, guid: 8ca58501a6f654eb0842d73e9c3a822b, type: 3}
   sightRadius: 2.19
 --- !u!50 &5876842744902112923
 Rigidbody2D:

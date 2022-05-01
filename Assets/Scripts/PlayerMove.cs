@@ -8,7 +8,7 @@ public class PlayerMove : MonoBehaviour
     float vertical;
     float moveLimiter = 0.7f;
 
-    public float MovementSpeed = 2f;
+    private float MovementSpeed = 6f;
 
     // Start is called before the first frame update
     void Start()

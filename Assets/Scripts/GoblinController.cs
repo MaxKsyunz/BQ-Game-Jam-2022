@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,21 +11,24 @@ public class GoblinController : MonoBehaviour
     {
         Casual,
         Hungry,
-        Angry
+        Angry,
+        Stunned
     }
 
     Dictionary<string, Mood> spriteMoodDict = new Dictionary<string, Mood>
     {
         { "Fruit", Mood.Hungry },
         { "Farmer", Mood.Angry },
-        { "Waypoint", Mood.Casual }
+        { "Waypoint", Mood.Casual },
+        { "Stunned", Mood.Stunned }
     };
 
     Dictionary<Mood, float> moodSpeedDict = new Dictionary<Mood, float>
     {
         { Mood.Hungry, 3f },
         { Mood.Angry, 3f },
-        { Mood.Casual, 2f }
+        { Mood.Casual, 2f },
+        { Mood.Stunned, 0f }
     };
 
     // Level specific waypoint list.
@@ -35,6 +39,9 @@ public class GoblinController : MonoBehaviour
     private float speed;
     LinkedList<GameObject> curPath;
     public float sightRadius = 5f;
+
+    private float stunDuration = 3000f;
+    private float lastStunned;
 
     SpriteRenderer spriteRenderer;
 
@@ -51,6 +58,8 @@ public class GoblinController : MonoBehaviour
         curPath.RemoveFirst();
         spriteRenderer = GetComponent<SpriteRenderer>();
         speed = moodSpeedDict[goblinMood];
+
+        lastStunned = Time.time * 1000;
     }
 
     private void loadDefaultPath()
@@ -63,7 +72,15 @@ public class GoblinController : MonoBehaviour
 
     void Update()
     {
-        WalkAround();
+        if (goblinMood == Mood.Stunned && ((Time.time * 1000) - lastStunned < stunDuration))
+        {
+            
+        }
+
+        else
+        {
+            WalkAround();
+        }
     }
 
     void WalkAround()
@@ -73,6 +90,10 @@ public class GoblinController : MonoBehaviour
             currentTarget = curPath.First.Value;
             curPath.RemoveFirst();
         }
+
+        speed = moodSpeedDict[goblinMood];
+        goblinMood = spriteMoodDict[currentTarget.gameObject.tag];
+        spriteRenderer.sprite = goblinSprites[(int)goblinMood];
 
         var step = speed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, currentTarget.transform.position, step);
@@ -89,10 +110,6 @@ public class GoblinController : MonoBehaviour
             currentTarget = curPath.First.Value;
             curPath.RemoveFirst();
         }
-
-        speed = moodSpeedDict[goblinMood];
-        goblinMood = spriteMoodDict[currentTarget.gameObject.tag];
-        spriteRenderer.sprite = goblinSprites[(int) goblinMood];
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -114,9 +131,18 @@ public class GoblinController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Fruit"))
         {
-            goblinMood = Mood.Casual;
             currentTarget = curPath.First.Value;
             curPath.RemoveFirst();
+        }
+
+        if (collision.gameObject.CompareTag("Rake"))
+        {
+            Debug.Log("RAKE");
+            goblinMood = Mood.Stunned;
+            spriteRenderer.sprite = goblinSprites[(int)goblinMood];
+            lastStunned = Time.time * 1000;
+            curPath.Clear();
+            loadDefaultPath();
         }
     }
 
