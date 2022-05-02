@@ -137,7 +137,6 @@ public class GoblinController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Rake"))
         {
-            Debug.Log("RAKE");
             goblinMood = Mood.Stunned;
             spriteRenderer.sprite = goblinSprites[(int)goblinMood];
             lastStunned = Time.time * 1000;

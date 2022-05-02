@@ -12,6 +12,7 @@ TagManager:
   - Waypoint
   - Farmer
   - Rake
+  - Chicken
   layers:
   - Default
   - TransparentFX

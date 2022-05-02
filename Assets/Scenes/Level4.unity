@@ -448,7 +448,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3468652891909270996, guid: b725c5408c8c248beab7fff2ef7e7438, type: 3}
       propertyPath: nextScene
-      value: End
+      value: Level5
       objectReference: {fileID: 0}
     - target: {fileID: 3468652891909270996, guid: b725c5408c8c248beab7fff2ef7e7438, type: 3}
       propertyPath: fruitCount
